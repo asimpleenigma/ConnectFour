@@ -10,6 +10,4 @@ The user can click anywhere in the column they want to place their piece in. The
 ### The AI
 The AI is smart enough to consistently beat probably over 95% of people. This is accomplished using the Mini-Max algorithm to select the move that will get it to at least the best outcome it can guarantee in a certain number of moves. It judges the outcomes based off of a super secret sauce heuristic. Irrelevant branches of the search space are removed from consideration using Alpha-Beta pruning, which square-root's the exponential runtime, allowing it to reach a search depth of 7 nearly instantly on my computer.
 
-![alt-text](/ScreenShots/Cross.png)
-
 ![alt-text](/ScreenShots/BlackWins.png)

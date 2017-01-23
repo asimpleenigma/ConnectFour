@@ -10,5 +10,7 @@ The game can be played human vs human, human vs AI, or even AI vs AI. The user c
 ### The AI
 The AI is smart enough to consistently beat probably over 95% of people. This is accomplished using the Mini-Max algorithm to select the move that will get it to at least the best outcome it can guarantee in a certain number of moves. It judges the outcomes based off of a super secret sauce heuristic. Irrelevant branches of the search space are removed from consideration using Alpha-Beta pruning, which square-root's the exponential runtime, allowing it to reach a search depth of 7 nearly instantly on my computer.
 
+The code is organized so that any class that implements the Player interface can easily be added as another agent that the user can select to play the game. My hope is that I can have a friendly connect four AI arms race with my friends, battling our AI's against each other.
+
 ![alt-text](/ScreenShots/BlackWin.png)
  

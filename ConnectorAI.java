@@ -4,14 +4,43 @@ package connectfour;
 
 import java.util.HashSet;
 import java.util.Set;
+import java.util.ArrayList;
 
 /**
  *
  * @author Lloyd Cloer
  */
 
-public class ConnectorAI {
-    private final static int cutoff_depth = 7;
+public class ConnectorAI implements Player{
+    private int cutoff_depth = 7;
+    
+    @Override
+    public ArrayList<String> difficulties(){
+        ArrayList<String> d = new ArrayList<>();
+        for (int i = 7; i >= 1; i--)
+            d.add(Integer.toString(i));
+        return d;
+    }
+    
+    @Override
+    public String name(){
+        return "Connector AI";
+    }
+    @Override
+    public int move(State s, String difficulty){
+        boolean empty = true;
+        for (int r = 0; r < 6; r++){ // check if board is empty
+            for (int c = 0 ; c < 7; c++){
+                if (s.board[r][c] != 0)
+                    empty = false;
+            }
+        }
+        int ran = (int) (Math.random()*7); // if first move, make random move
+        if (empty) return ran;
+        cutoff_depth = Integer.parseInt(difficulty);
+        
+        return alphaBetaSearch(s);
+    }
     
     private boolean cutoffTest(State s, int depth){
         return (depth >= cutoff_depth) || s.isTerminal();
@@ -21,13 +50,25 @@ public class ConnectorAI {
         // find which descendant node has highest value.
         AlteredState s = new AlteredState(state);
         int action = (int) (s.legal_actions.toArray())[0]; // best action to take so far.
-        double value = Double.NEGATIVE_INFINITY; // highest value any action so far has
-        for (int a : s.legal_actions){ // for each action,
-            AlteredState descendant = s.Result(a); // create decendant node.
-            minValue(descendant, 1, Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY); // find value of decendant node.
-            if (descendant.effective_utility > value){
-                value = descendant.effective_utility;
-                action = a;
+        if (state.turn){ // black turn
+            double value = Double.NEGATIVE_INFINITY; // highest value any action so far has
+            for (int a : s.legal_actions){ // for each action,
+                AlteredState descendant = s.Result(a); // create decendant node.
+                minValue(descendant, 1, Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY); // find value of decendant node.
+                if (descendant.effective_utility > value){
+                    value = descendant.effective_utility;
+                    action = a;
+                }
+            }
+        } else{ // red's turn
+            double value = Double.POSITIVE_INFINITY; // highest value any action so far has
+            for (int a : s.legal_actions){ // for each action,
+                AlteredState descendant = s.Result(a); // create decendant node.
+                maxValue(descendant, 1, Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY); // find value of decendant node.
+                if (descendant.effective_utility < value){
+                    value = descendant.effective_utility;
+                    action = a;
+                }
             }
         }
         return action;
